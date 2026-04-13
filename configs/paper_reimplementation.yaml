@@ -1,0 +1,64 @@
+seed: 42
+
+dataset:
+  root: data/kitti
+  image_dir: image_2
+  lidar_dir: lidar_bev
+  weather_dir: weather
+  labels_dir: labels
+  seg_labels_dir: seg_labels
+  image_size: [384, 640]
+  num_segmentation_classes: 6
+  train_split: 0.8
+
+preprocessing:
+  gamma: 1.2
+  clahe_clip_limit: 2.5
+  clahe_grid_size: 8
+  weighted_mean_kernel: 9
+  weighted_mean_c: 4
+
+segmentation:
+  orientations: [95, -30, 30]
+  base_channels: 32
+  num_classes: 6
+  learning_rate: 0.0003
+  batch_size: 4
+  epochs: 50
+
+fusion:
+  growth_rate: 16
+  block_layers: [4, 4, 4]
+  out_channels: 96
+
+detection:
+  yolo_onnx_path: weights/yolov7.onnx
+  confidence_threshold: 0.25
+  nms_threshold: 0.45
+  input_size: 640
+  class_names: ["car", "pedestrian", "cyclist", "truck", "bus", "motorbike"]
+
+planner:
+  evo_population: 64
+  evo_iterations: 15
+  grid_size: [24, 24]
+  enrichment_threshold_scale: 1.0
+
+dqn:
+  state_dim: 32
+  action_dim: 5
+  hidden_dim: 24
+  learning_rate: 0.001
+  gamma: 0.99
+  batch_size: 64
+  buffer_size: 20000
+  target_update_frequency: 250
+  gradient_clip: 1.0
+  epochs: 100
+  epsilon_start: 1.0
+  epsilon_end: 0.05
+  epsilon_decay: 0.995
+
+runtime:
+  device: cuda
+  output_dir: outputs
